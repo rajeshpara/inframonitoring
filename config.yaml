@@ -1,0 +1,37 @@
+# Global settings
+settings:
+  dashboard_title: "Infrastructure Services Status"
+  refresh_interval_seconds: 60
+  timeout_seconds: 10
+  alerting:
+    enabled: true
+    Consecutive_failures_to_alert: 3
+    smtp_server: "smtp.gmail.com"  # e.g., smtp.office365.com, localhost
+    smtp_port: 587
+    use_tls: true
+    sender_email: "pararajesh228@gmail.com"
+    sender_password: "cviv imgk cejj ffwz" # Use an App Password, or leave blank if local relay
+    recipient_emails:
+      - "raje228@gmail.com"
+      # - "oncall@example.com"
+
+# Define targets (hosts) and the services you want to monitor for each
+targets:
+  - host: "192.168.2.130"
+    user: "root"
+    services:
+      - name: "sshd"
+        app_check_cmd: "echo 'SSH is responding'" # Example command
+      - name: "cron"
+        # Since cron has no app check, we just define name or use simple string
+      # - name: "httpd"
+      #   app_check_cmd: "curl -s -f -o /dev/null http://localhost || echo 'dead'"
+
+  # Example of another host with different services:
+  # - host: "db-server-01"
+  #   user: "admin"
+  #   services:
+  #     - name: "postgresql"
+  #       app_check_cmd: "pg_isready -q"
+  #     - name: "redis"
+  #     - name: "sshd"
