@@ -24,14 +24,58 @@ targets:
         app_check_cmd: "echo 'SSH is responding'" # Example command
       - name: "cron"
         # Since cron has no app check, we just define name or use simple string
+      - name: "Weka-snaptool.service"
+        app_check_cmd: "grep $(date '+%Y-%m-%d') /opt/weka-snaptool/logs/logs.txt || echo 'error'"
       # - name: "httpd"
       #   app_check_cmd: "curl -s -f -o /dev/null http://localhost || echo 'dead'"
 
   # Example of another host with different services:
-  # - host: "db-server-01"
-  #   user: "admin"
-  #   services:
-  #     - name: "postgresql"
-  #       app_check_cmd: "pg_isready -q"
-  #     - name: "redis"
-  #     - name: "sshd"
+  - host: "docker-host-01" # Change this to your actual Docker host IP/Hostname
+    user: "user1"
+    services:
+      - name: "docker"
+        sys_check_cmd: 'dzdo bash -c "systemctl is-active docker"'
+        app_check_cmd: 'dzdo bash -c "count=\$(docker ps -q | wc -l); [ \$count -eq 5 ] && echo \"active\" || echo \"error: \$count containers running (expected 5)\""'
+
+# Storage Arrays monitoring (Checked once per hour)
+storage_arrays:
+  - type: "pure"
+    name: "dogfood-brisket"
+    host: "10.0.0.51"
+    user: "pureuser"
+  - type: "pure"
+    name: "dogfood-caribou"
+    host: "10.0.0.52"
+    user: "pureuser"
+  - type: "pure"
+    name: "dogfood-chewtoy"
+    host: "10.0.0.53"
+    user: "pureuser"
+  - type: "pure"
+    name: "dogfood-chital"
+    host: "10.0.0.54"
+    user: "pureuser"
+  - type: "pure"
+    name: "dogfood-chuckwagon"
+    host: "10.0.0.55"
+    user: "pureuser"
+  - type: "netapp"
+    name: "netapp-cluster-01"
+    host: "10.0.1.51"
+    user: "admin"
+  - type: "netapp"
+    name: "netapp-cluster-02"
+    host: "10.0.1.52"
+    user: "admin"
+  - type: "netapp"
+    name: "netapp-cluster-03"
+    host: "10.0.1.53"
+    user: "admin"
+  - type: "netapp"
+    name: "netapp-cluster-04"
+    host: "10.0.1.54"
+    user: "admin"
+  - type: "netapp"
+    name: "netapp-cluster-05"
+    host: "10.0.1.55"
+    user: "admin"

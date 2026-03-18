@@ -245,6 +245,7 @@
         100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
@@ -253,11 +254,338 @@
             <h1>Infrastructure Services Status</h1>
             <div class='meta-info'>
                 <div class='last-updated'>Last Updated</div>
-                <div>2026-03-16 00:35:32</div>
+                <div>2026-03-16 16:00:37</div>
                 <div style='margin-top: 4px; font-size: 0.75rem; opacity: 0.7;'>Auto-refreshes every 5 mins</div>
             </div>
         </header>
         <div class='grid'>
+            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>
+                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>Pure Arrays</h2>
+                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;'>
+                    <div class='host-card' style='display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>dogfood-brisket</div>
+                       <div style='display: flex; gap: 1.5rem; width: 100%; align-items: center; justify-content: center'>
+                           <div style='position: relative; width: 120px; height: 120px;'>
+                               <canvas id='chart_dogfood_brisket'></canvas>
+                               <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;'>
+                                   <div style='font-size: 1.5rem; font-weight: 700; color: #f8fafc; line-height: 1;'>64%</div>
+                               </div>
+                           </div>
+                           <div style='display: flex; flex-direction: column; align-items: center; gap: 1rem;'>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 0.85rem; font-weight: 700; color: #f8fafc; white-space: nowrap;'>66.4 / 104.3 T</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Used / Total</div>
+                               </div>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc;'>3.1 to 1</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Data Reduction</div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <script>
+                       const ctx_chart_dogfood_brisket = document.getElementById('chart_dogfood_brisket').getContext('2d');
+                       new Chart(ctx_chart_dogfood_brisket, {
+                           type: 'doughnut',
+                           data: {
+                               labels: ['Used', 'Free'],
+                               datasets: [{
+                                   data: [66.4, 37.89999999999999],
+                                   backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderColor: ['rgba(16, 185, 129, 1)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderWidth: 1,
+                                   hoverOffset: 2
+                               }]
+                           },
+                           options: { 
+                               responsive: true, 
+                               maintainAspectRatio: true,
+                               plugins: { legend: { display: false }, tooltip: { enabled: true } }, 
+                               cutout: '75%', 
+                               elements: { arc: { borderJoinStyle: 'round' } },
+                               layout: { padding: 0 }
+                           }
+                       });
+                    </script>
+                    <div class='host-card' style='display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>dogfood-caribou</div>
+                       <div style='display: flex; gap: 1.5rem; width: 100%; align-items: center; justify-content: center'>
+                           <div style='position: relative; width: 120px; height: 120px;'>
+                               <canvas id='chart_dogfood_caribou'></canvas>
+                               <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;'>
+                                   <div style='font-size: 1.5rem; font-weight: 700; color: #f8fafc; line-height: 1;'>19%</div>
+                               </div>
+                           </div>
+                           <div style='display: flex; flex-direction: column; align-items: center; gap: 1rem;'>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 0.85rem; font-weight: 700; color: #f8fafc; white-space: nowrap;'>11.0 / 57.1 T</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Used / Total</div>
+                               </div>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc;'>3.4 to 1</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Data Reduction</div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <script>
+                       const ctx_chart_dogfood_caribou = document.getElementById('chart_dogfood_caribou').getContext('2d');
+                       new Chart(ctx_chart_dogfood_caribou, {
+                           type: 'doughnut',
+                           data: {
+                               labels: ['Used', 'Free'],
+                               datasets: [{
+                                   data: [11.0, 46.1],
+                                   backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderColor: ['rgba(16, 185, 129, 1)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderWidth: 1,
+                                   hoverOffset: 2
+                               }]
+                           },
+                           options: { 
+                               responsive: true, 
+                               maintainAspectRatio: true,
+                               plugins: { legend: { display: false }, tooltip: { enabled: true } }, 
+                               cutout: '75%', 
+                               elements: { arc: { borderJoinStyle: 'round' } },
+                               layout: { padding: 0 }
+                           }
+                       });
+                    </script>
+                    <div class='host-card' style='display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>dogfood-chewtoy</div>
+                       <div style='display: flex; gap: 1.5rem; width: 100%; align-items: center; justify-content: center'>
+                           <div style='position: relative; width: 120px; height: 120px;'>
+                               <canvas id='chart_dogfood_chewtoy'></canvas>
+                               <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;'>
+                                   <div style='font-size: 1.5rem; font-weight: 700; color: #f8fafc; line-height: 1;'>13%</div>
+                               </div>
+                           </div>
+                           <div style='display: flex; flex-direction: column; align-items: center; gap: 1rem;'>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 0.85rem; font-weight: 700; color: #f8fafc; white-space: nowrap;'>13.2 / 103.3 T</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Used / Total</div>
+                               </div>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc;'>2.5 to 1</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Data Reduction</div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <script>
+                       const ctx_chart_dogfood_chewtoy = document.getElementById('chart_dogfood_chewtoy').getContext('2d');
+                       new Chart(ctx_chart_dogfood_chewtoy, {
+                           type: 'doughnut',
+                           data: {
+                               labels: ['Used', 'Free'],
+                               datasets: [{
+                                   data: [13.2, 90.1],
+                                   backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderColor: ['rgba(16, 185, 129, 1)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderWidth: 1,
+                                   hoverOffset: 2
+                               }]
+                           },
+                           options: { 
+                               responsive: true, 
+                               maintainAspectRatio: true,
+                               plugins: { legend: { display: false }, tooltip: { enabled: true } }, 
+                               cutout: '75%', 
+                               elements: { arc: { borderJoinStyle: 'round' } },
+                               layout: { padding: 0 }
+                           }
+                       });
+                    </script>
+                    <div class='host-card' style='display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>dogfood-chital</div>
+                       <div style='display: flex; gap: 1.5rem; width: 100%; align-items: center; justify-content: center'>
+                           <div style='position: relative; width: 120px; height: 120px;'>
+                               <canvas id='chart_dogfood_chital'></canvas>
+                               <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;'>
+                                   <div style='font-size: 1.5rem; font-weight: 700; color: #f8fafc; line-height: 1;'>10%</div>
+                               </div>
+                           </div>
+                           <div style='display: flex; flex-direction: column; align-items: center; gap: 1rem;'>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; white-space: nowrap;'>4.8 / 49.8 T</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Used / Total</div>
+                               </div>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc;'>5.0 to 1</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Data Reduction</div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <script>
+                       const ctx_chart_dogfood_chital = document.getElementById('chart_dogfood_chital').getContext('2d');
+                       new Chart(ctx_chart_dogfood_chital, {
+                           type: 'doughnut',
+                           data: {
+                               labels: ['Used', 'Free'],
+                               datasets: [{
+                                   data: [4.8, 45.0],
+                                   backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderColor: ['rgba(16, 185, 129, 1)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderWidth: 1,
+                                   hoverOffset: 2
+                               }]
+                           },
+                           options: { 
+                               responsive: true, 
+                               maintainAspectRatio: true,
+                               plugins: { legend: { display: false }, tooltip: { enabled: true } }, 
+                               cutout: '75%', 
+                               elements: { arc: { borderJoinStyle: 'round' } },
+                               layout: { padding: 0 }
+                           }
+                       });
+                    </script>
+                    <div class='host-card' style='display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>dogfood-chuckwagon</div>
+                       <div style='display: flex; gap: 1.5rem; width: 100%; align-items: center; justify-content: center'>
+                           <div style='position: relative; width: 120px; height: 120px;'>
+                               <canvas id='chart_dogfood_chuckwagon'></canvas>
+                               <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;'>
+                                   <div style='font-size: 1.5rem; font-weight: 700; color: #f8fafc; line-height: 1;'>9%</div>
+                               </div>
+                           </div>
+                           <div style='display: flex; flex-direction: column; align-items: center; gap: 1rem;'>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; white-space: nowrap;'>5.1 / 57.1 T</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Used / Total</div>
+                               </div>
+                               <div style='display: flex; flex-direction: column; align-items: center;'>
+                                   <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc;'>1.4 to 1</div>
+                                   <div style='font-size: 0.7rem; color: #94a3b8;'>Data Reduction</div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <script>
+                       const ctx_chart_dogfood_chuckwagon = document.getElementById('chart_dogfood_chuckwagon').getContext('2d');
+                       new Chart(ctx_chart_dogfood_chuckwagon, {
+                           type: 'doughnut',
+                           data: {
+                               labels: ['Used', 'Free'],
+                               datasets: [{
+                                   data: [5.1, 52.0],
+                                   backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderColor: ['rgba(16, 185, 129, 1)', 'rgba(255, 255, 255, 0.1)'],
+                                   borderWidth: 1,
+                                   hoverOffset: 2
+                               }]
+                           },
+                           options: { 
+                               responsive: true, 
+                               maintainAspectRatio: true,
+                               plugins: { legend: { display: false }, tooltip: { enabled: true } }, 
+                               cutout: '75%', 
+                               elements: { arc: { borderJoinStyle: 'round' } },
+                               layout: { padding: 0 }
+                           }
+                       });
+                    </script>
+                </div>
+            </div>
+            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>
+                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>NetApp Clusters</h2>
+                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;'>
+                    <div class='host-card' style='padding: 1.5rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>netapp-cluster-01</div>
+                       <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr1</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>25GB / 50GB <span style='color: #10b981; font-weight: 700; margin-left: 0.3rem;'>50%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 50%; background-color: #10b981; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr2</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>20GB / 100GB <span style='color: #10b981; font-weight: 700; margin-left: 0.3rem;'>20%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 20%; background-color: #10b981; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class='host-card' style='padding: 1.5rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>netapp-cluster-02</div>
+                       <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr1</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>8TB / 10TB <span style='color: #f59e0b; font-weight: 700; margin-left: 0.3rem;'>80%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 80%; background-color: #f59e0b; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr_n1</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>1.9TB / 2TB <span style='color: #ef4444; font-weight: 700; margin-left: 0.3rem;'>95%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 95%; background-color: #ef4444; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class='host-card' style='padding: 1.5rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>netapp-cluster-03</div>
+                       <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr_data</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>100TB / 500TB <span style='color: #10b981; font-weight: 700; margin-left: 0.3rem;'>20%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 20%; background-color: #10b981; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class='host-card' style='padding: 1.5rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>netapp-cluster-04</div>
+                       <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr01</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>37TB / 50TB <span style='color: #10b981; font-weight: 700; margin-left: 0.3rem;'>74%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 74%; background-color: #10b981; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class='host-card' style='padding: 1.5rem;'>
+                       <div style='font-size: 1.1rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.5rem; text-align: center;'>netapp-cluster-05</div>
+                       <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
+                           <div>
+                               <div style='display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.4rem;'>
+                                   <div style='color: #e2e8f0; font-weight: 600; font-size: 0.9rem;'>aggr_db</div>
+                                   <div style='color: #94a3b8; font-size: 0.75rem;'>18TB / 20TB <span style='color: #ef4444; font-weight: 700; margin-left: 0.3rem;'>90%</span></div>
+                               </div>
+                               <div style='width: 100%; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; height: 0.5rem; overflow: hidden;'>
+                                   <div style='width: 90%; background-color: #ef4444; height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out;'></div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div style='grid-column: 1/-1; border-top: 2px dashed rgba(255, 255, 255, 0.1); margin: 1rem 0 2rem 0;'></div>
+            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>
+                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>Server Hosts</h2>
+                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;'>
             <div class='host-card'>
                 <div class='host-header'>
                     <div class='host-icon'>
@@ -301,7 +629,61 @@
                             </div>
                         </div>
                     </li>
+                    <li class='service-item'>
+                        <div class='service-info'>
+                            <span class='service-name'>Weka-snaptool.service</span>
+                        </div>
+                        <div class='dual-indicators'>
+                            <div class='indicator-row' title='systemd status: inactive'>
+                                <span class='indicator-label'>System</span>
+                                <span class='status-badge status-dead'>
+                                    <span class='status-indicator'></span>
+                                    Dead
+                                </span>
+                            </div>
+                            <div class='indicator-row' title='App script status: failed'>
+                                <span class='indicator-label'>App</span>
+                                <span class='status-badge status-dead'>
+                                    <span class='status-indicator'></span>
+                                    Dead
+                                </span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
+            </div>
+            <div class='host-card'>
+                <div class='host-header'>
+                    <div class='host-icon'>
+                        <svg width='24' height='24' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01'></path></svg>
+                    </div>
+                    <div class='host-title'>docker-host-01</div>
+                </div>
+                <ul class='service-list'>
+                    <li class='service-item'>
+                        <div class='service-info'>
+                            <span class='service-name'>docker</span>
+                        </div>
+                        <div class='dual-indicators'>
+                            <div class='indicator-row' title='systemd status: error: ssh: Could not resolve hostname docker-host-01: nodename nor servname provided, or not known'>
+                                <span class='indicator-label'>System</span>
+                                <span class='status-badge status-dead'>
+                                    <span class='status-indicator'></span>
+                                    Dead
+                                </span>
+                            </div>
+                            <div class='indicator-row' title='App script status: unknown'>
+                                <span class='indicator-label'>App</span>
+                                <span class='status-badge status-unknown'>
+                                    <span class='status-indicator'></span>
+                                    Unknown
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+                </div>
             </div>
         </div>
     </div>

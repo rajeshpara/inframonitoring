@@ -158,7 +158,7 @@ def run_ssh_cmd(user: str, host: str, remote_cmd: str, timeout: int) -> tuple[st
     )
     return result.stdout.strip(), result.stderr.strip()
 
-def check_service(user: str, host: str, service_name: str, app_cmd: str | None, timeout: int) -> dict[str, str]:
+def check_service(user: str, host: str, service_name: str, sys_cmd: str | None, app_cmd: str | None, timeout: int) -> dict[str, str]:
     """
     Checks the status of the systemd service, and optionally runs an app-level check.
     Returns a dict with 'systemd_status' and 'app_status'.
@@ -170,7 +170,8 @@ def check_service(user: str, host: str, service_name: str, app_cmd: str | None, 
 
     # 1. Check systemd process state
     try:
-        sys_out, sys_err = run_ssh_cmd(user, host, f"systemctl is-active {service_name}", timeout)
+        cmd_to_run = sys_cmd if sys_cmd else f"systemctl is-active {service_name}"
+        sys_out, sys_err = run_ssh_cmd(user, host, cmd_to_run, timeout)
         if not sys_out:
             if "Permission denied" in sys_err:
                 status_dict["systemd_status"] = "ssh_auth_error"
@@ -252,15 +253,19 @@ def main():
             # Handle list strings or object dictionaries
             if isinstance(svc, dict):
                 service_name = str(svc.get("name", "unknown"))
+                sys_cmd = svc.get("sys_check_cmd")
                 app_cmd = svc.get("app_check_cmd")
+                if sys_cmd is not None:
+                     sys_cmd = str(sys_cmd)
                 if app_cmd is not None:
                      app_cmd = str(app_cmd)
             else:
                 service_name = str(svc)
+                sys_cmd = None
                 app_cmd = None
                 
             print(f"  -> {service_name}: ", end="")
-            status_obj = check_service(user, host, service_name, app_cmd, timeout)
+            status_obj = check_service(user, host, service_name, sys_cmd, app_cmd, timeout)
             
             s_sys = status_obj['systemd_status']
             s_app = status_obj['app_status']
