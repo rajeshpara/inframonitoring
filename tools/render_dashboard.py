@@ -43,9 +43,9 @@ CSS_STYLES = """
     body {
         font-family: 'Inter', sans-serif;
         background-color: var(--bg-color);
-        background-image: 
-            radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-            radial-gradient(at 50% 0%, hsla(225,39%,30%,0.2) 0, transparent 50%), 
+        background-image:
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+            radial-gradient(at 50% 0%, hsla(225,39%,30%,0.2) 0, transparent 50%),
             radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
         color: var(--text-main);
         min-height: 100vh;
@@ -61,7 +61,7 @@ CSS_STYLES = """
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid var(--card-border);
     }
@@ -86,10 +86,71 @@ CSS_STYLES = """
         margin-bottom: 0.25rem;
     }
 
+    /* Tab navigation */
+    .tab-nav {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 0;
+    }
+
+    .tab-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: color 0.2s ease, border-color 0.2s ease;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .tab-btn:hover {
+        color: var(--text-main);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+        color: #60a5fa;
+        border-bottom: 2px solid #60a5fa;
+        background: rgba(59, 130, 246, 0.08);
+    }
+
+    .tab-panel {
+        display: none;
+    }
+
+    .tab-panel.active {
+        display: block;
+    }
+
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: 2rem;
+    }
+
+    .storage-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .netapp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .servers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
     }
 
     .host-card {
@@ -321,6 +382,20 @@ def generate_html(data: dict) -> str:
     except:
         last_updated = last_updated_raw
 
+    storage_data = parse_storage_csv()
+    netapp_data = parse_netapp_csv()
+
+    # Build tab labels — only include tabs that have data
+    tabs = []
+    if storage_data:
+        tabs.append(("pure", "Pure Storage"))
+    if netapp_data:
+        tabs.append(("netapp", "NetApp"))
+    if hosts:
+        tabs.append(("servers", "Servers"))
+
+    first_tab = tabs[0][0] if tabs else "pure"
+
     # Build HTML String
     html = [
         "<!DOCTYPE html>",
@@ -342,16 +417,22 @@ def generate_html(data: dict) -> str:
         "                <div style='margin-top: 4px; font-size: 0.75rem; opacity: 0.7;'>Auto-refreshes every 5 mins</div>",
         "            </div>",
         "        </header>",
-        "        <div class='grid'>"
     ]
-    
-    # --- PURE STORAGE SECTION ---
-    storage_data = parse_storage_csv()
+
+    # Tab navigation bar
+    html.append("        <nav class='tab-nav'>")
+    for tab_id, tab_label in tabs:
+        active_class = " active" if tab_id == first_tab else ""
+        html.append(f"            <button class='tab-btn{active_class}' onclick='showTab(\"{tab_id}\")'>{tab_label}</button>")
+    html.append("        </nav>")
+
+    # ── PURE STORAGE TAB ──────────────────────────────────────────────────────
+    active_class = " active" if first_tab == "pure" else ""
+    html.append(f"        <div id='tab-pure' class='tab-panel{active_class}'>")
     if storage_data:
         html.extend([
-            "            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
-            "                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>Pure Arrays</h2>",
-            "                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;'>",
+            "            <div style='background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
+            "                <div class='storage-grid'>",
         ])
         
         for array_name, row in storage_data.items():
@@ -458,18 +539,20 @@ def generate_html(data: dict) -> str:
             ])
 
         html.extend([
-            "                </div>", # close grid
-            "            </div>"   # close container
+            "                </div>",  # close storage-grid
+            "            </div>",      # close panel card
         ])
-    # --- END PURE STORAGE SECTION ---
-    
-    # --- NETAPP STORAGE SECTION ---
-    netapp_data = parse_netapp_csv()
+    else:
+        html.append("            <p style='color: var(--text-muted); padding: 2rem;'>No Pure Storage data available.</p>")
+    html.append("        </div>")  # close tab-pure
+
+    # ── NETAPP TAB ────────────────────────────────────────────────────────────
+    active_class = " active" if first_tab == "netapp" else ""
+    html.append(f"        <div id='tab-netapp' class='tab-panel{active_class}'>")
     if netapp_data:
         html.extend([
-            "            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
-            "                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>NetApp Clusters</h2>",
-            "                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;'>",
+            "            <div style='background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
+            "                <div class='netapp-grid'>",
         ])
         
         for cluster_name, aggregates in netapp_data.items():
@@ -516,21 +599,22 @@ def generate_html(data: dict) -> str:
             ])
             
         html.extend([
-            "                </div>",
-            "            </div>"
+            "                </div>",  # close netapp-grid
+            "            </div>",      # close panel card
         ])
-    # --- END NETAPP SECTION ---
+    else:
+        html.append("            <p style='color: var(--text-muted); padding: 2rem;'>No NetApp data available.</p>")
+    html.append("        </div>")  # close tab-netapp
 
+    # ── SERVERS TAB ───────────────────────────────────────────────────────────
+    active_class = " active" if first_tab == "servers" else ""
+    html.append(f"        <div id='tab-servers' class='tab-panel{active_class}'>")
     if not hosts:
-        html.append("<div style='grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;'>")
-        html.append("   <p>No hosts configured.</p>")
-        html.append("</div>")
+        html.append("            <p style='color: var(--text-muted); padding: 2rem;'>No hosts configured.</p>")
     else:
         html.extend([
-            "            <div style='grid-column: 1/-1; border-top: 2px dashed rgba(255, 255, 255, 0.1); margin: 1rem 0 2rem 0;'></div>",
-            "            <div style='grid-column: 1/-1; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
-            "                <h2 style='font-size: 1.5rem; margin-bottom: 1.5rem; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;'>Server Hosts</h2>",
-            "                <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;'>",
+            "            <div style='background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem;'>",
+            "                <div class='servers-grid'>",
         ])
         
         for host, services in hosts.items():
@@ -589,12 +673,21 @@ def generate_html(data: dict) -> str:
             html.append("            </div>")
 
         html.extend([
-            "                </div>", # close server hosts grid
-            "            </div>"   # close server hosts container
+            "                </div>",  # close servers-grid
+            "            </div>",      # close panel card
         ])
+    html.append("        </div>")  # close tab-servers
 
+    # ── Tab switching JS ──────────────────────────────────────────────────────
     html.extend([
-        "        </div>",
+        "        <script>",
+        "        function showTab(id) {",
+        "            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));",
+        "            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));",
+        "            document.getElementById('tab-' + id).classList.add('active');",
+        "            document.querySelector('.tab-btn[onclick=\"showTab(\\\"' + id + '\\\")\"]').classList.add('active');",
+        "        }",
+        "        </script>",
         "    </div>",
         "</body>",
         "</html>"
