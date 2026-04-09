@@ -113,9 +113,8 @@ def main():
                 host = array.get("host")
                 user = array.get("user")
                 
-                print(f"Checking {array_type} array: {name} ({host})")
-                
                 if array_type == "pure":
+                    print(f"Checking pure array: {name} ({host})")
                     # Run Pure CLI space checkout
                     out, err = run_ssh_cmd(user, host, "purearray list --space")
                     
