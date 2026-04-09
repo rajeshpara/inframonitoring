@@ -18,29 +18,61 @@ LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "logs", "netapp_storage
 
 def extract_netapp_aggregates(raw_output: str) -> list:
     """
-    Parses `storage aggregate show-space` tabular output. 
-    Returns a list of dicts: [{"Aggregate": X, "Size": Y, "Used": Z, "Available": A, "Used_Percent": B}, ...]
+    Parses output of:
+      storage aggregate show -fields size,usedsize,availsize,percent-used
+
+    The header row defines column order; values are read positionally so the
+    output remains correct regardless of column ordering.
+
+    Returns a list of dicts:
+      [{"Aggregate": X, "Size": Y, "Used": Z, "Available": A, "Used_Percent": B}, ...]
     """
     aggregates = []
     lines = raw_output.strip().split("\n")
-    
-    # We look for lines that have 5 columns and where the first word doesn't start with a space or hyphen
+
+    # Map NetApp field names → our CSV keys
+    FIELD_MAP = {
+        "aggregate": "Aggregate",
+        "size":      "Size",
+        "usedsize":  "Used",
+        "availsize": "Available",
+        "percent-used": "Used_Percent",
+    }
+
+    headers = None  # list of our CSV keys in column order
+
     for line in lines:
-        if not line.strip() or line.startswith('-') or line.startswith(' '):
+        stripped = line.strip()
+
+        # Skip blank lines, separator lines, footer, and login banner
+        if (not stripped
+                or stripped.startswith("-")
+                or "entries were displayed" in stripped
+                or stripped.startswith("Last login")):
             continue
-        
-        parts = line.split()
-        if len(parts) == 5 and "%" in parts[4]:
-            if parts[0].lower() == "aggregate":
-                continue # Header
-            # Found an aggregate line
-            aggregates.append({
-                "Aggregate": parts[0],
-                "Size": parts[1],
-                "Used": parts[2],
-                "Available": parts[3],
-                "Used_Percent": parts[4]
-            })
+
+        parts = stripped.split()
+
+        # Detect header row by presence of known field names
+        if headers is None and parts[0].lower() in FIELD_MAP:
+            headers = [FIELD_MAP.get(p.lower(), p) for p in parts]
+            continue
+
+        if headers is None:
+            continue  # still looking for the header
+
+        if len(parts) < len(headers):
+            continue  # malformed line
+
+        row = dict(zip(headers, parts))
+        aggregates.append({
+            "Aggregate":   row.get("Aggregate", "N/A"),
+            "Size":        row.get("Size", "N/A"),
+            "Used":        row.get("Used", "N/A"),
+            "Available":   row.get("Available", "N/A"),
+            "Used_Percent": row.get("Used_Percent", "N/A"),
+        })
+
     return aggregates
 
 def run_ssh_cmd(user, host, command, timeout=20):
@@ -91,7 +123,7 @@ def main():
             
             if array_type == "netapp":
                 print(f"Checking NetApp array: {name} ({host})")
-                out, err = run_ssh_cmd(user, host, "storage aggregate show-space")
+                out, err = run_ssh_cmd(user, host, "storage aggregate show -fields size,usedsize,availsize,percent-used")
                 
                 if not out:
                      print(f"  [!] Failed to collect metrics: {err}")
