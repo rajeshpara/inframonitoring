@@ -32,7 +32,7 @@ def load_config(path: str) -> dict:
         print(f"Error reading config: {e}")
         sys.exit(1)
 
-def run_ssh_cmd(user: str, host: str, remote_cmd: str, timeout: int = 15) -> tuple[str, str]:
+def run_ssh_cmd(user, host, remote_cmd, timeout=15):
     """Runs SSH command. Note: passwordless SSH must be configured for the Target."""
     ssh_cmd = [
         "ssh",
