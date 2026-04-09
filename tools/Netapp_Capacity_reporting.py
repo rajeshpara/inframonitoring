@@ -88,8 +88,9 @@ def run_ssh_cmd(user, host, command, timeout=20):
         result = subprocess.run(ssh_cmd, capture_output=True, text=True, timeout=timeout)
         # NetApp SSH sessions often return a non-zero exit code even on success.
         # Treat any non-empty stdout as success.
-        if result.stdout.strip():
-            return result.stdout, None
+        stdout = result.stdout or ""
+        if stdout.strip():
+            return stdout, None
         else:
             return None, result.stderr or f"Empty output (exit code {result.returncode})"
     except Exception as e:
