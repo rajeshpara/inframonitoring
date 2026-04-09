@@ -44,12 +44,14 @@ def run_ssh_cmd(user, host, remote_cmd, timeout=15):
     ]
     try:
         result = subprocess.run(
-            ssh_cmd, 
-            capture_output=True, 
-            text=True, 
+            ssh_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             timeout=timeout
         )
-        return result.stdout.strip(), result.stderr.strip()
+        stdout = result.stdout.decode("utf-8", errors="replace").strip()
+        stderr = result.stderr.decode("utf-8", errors="replace").strip()
+        return stdout, stderr
     except subprocess.TimeoutExpired:
          return "", "SSH Execution Timeout"
     except Exception as e:
@@ -144,7 +146,7 @@ def main():
                     writer.writerow(row)
                     print(f"  [+] Logged Metrics: {parsed['used']} / {parsed['capacity']}")
                 else:
-                    print(f"  [!] Unknown storage type: {array_type}")
+                    continue  # skip non-pure arrays
 
     except Exception as e:
          print(f"Error updating CSV: {e}")
