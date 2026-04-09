@@ -59,43 +59,35 @@ def run_ssh_cmd(user, host, remote_cmd, timeout=15):
 
 def parse_pure_capacity(raw_output: str) -> dict:
     """
-    Parses `purearray list --space` tabular output. 
-    Handles multi-word headers like "Data Reduction".
-    Returns: {"Capacity": X, "Used": Y, "Data Reduction": Z}
+    Parses `purearray list --space` tabular output.
+
+    Splits both header and data rows by 2+ consecutive spaces so that
+    multi-word column names ("Data Reduction", "Thin Provisioning") and
+    multi-word values ("1.8 to 1") are preserved as single tokens.
+
+    Extracts: Capacity, Total (used), Data Reduction ratio.
     """
+    import re
+
     data = {"capacity": "Unknown", "used": "Unknown", "drr": "Unknown"}
-    
-    lines = raw_output.strip().split("\n")
+
+    lines = [l for l in raw_output.strip().split("\n") if l.strip()]
     if len(lines) < 2:
         return data
-        
-    # The header line, e.g., "Name  Size  Used  Total  Shared  Snapshots  Data Reduction  Used-Thin"
-    header_line = lines[0]
-    
-    # We can't just split() because "Data Reduction" has a space. 
-    # But we can find the exact text indexes because it's fixed width or tab separated.
-    # An easier robust way is to replace "Data Reduction" with "DataReduction" before splitting.
-    header_clean = header_line.replace("Data Reduction", "DataReduction")
-    headers = header_clean.split()
-    
-    # Do the same for the data rows just in case there are awkward spaces, 
-    # but data rows shouldn't have spaces within values (e.g., 5.1:1).
-    for i in range(1, len(lines)):
-        line = lines[i]
-        parts = line.split()
-        
-        # If the array row has exactly the same number of columns as the headers
-        if len(parts) == len(headers):
-            # Try to extract the specific columns we care about
-            if "Size" in headers:
-                data["capacity"] = parts[headers.index("Size")]
-            if "Total" in headers:
-                 data["used"] = parts[headers.index("Total")]
-            if "DataReduction" in headers:
-                 data["drr"] = parts[headers.index("DataReduction")]
-                 
-            # Stop after the first valid line
-            break
+
+    headers = [h.strip() for h in re.split(r'\s{2,}', lines[0].strip())]
+
+    for line in lines[1:]:
+        if not line.strip():
+            continue
+        values = [v.strip() for v in re.split(r'\s{2,}', line.strip())]
+        if len(values) != len(headers):
+            continue
+        row = dict(zip(headers, values))
+        data["capacity"] = row.get("Capacity", "Unknown")
+        data["used"]     = row.get("Total", "Unknown")
+        data["drr"]      = row.get("Data Reduction", "Unknown")
+        break
 
     return data
 
